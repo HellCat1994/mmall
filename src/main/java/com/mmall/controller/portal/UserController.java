@@ -21,6 +21,14 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     @Autowired
     private IUserService iUserService;
+
+    /**
+     * 登陆
+     * @param username
+     * @param password
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "login.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession httpSession){
@@ -31,6 +39,11 @@ public class UserController {
         return response;
     }
 
+    /**
+     * 注销
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "logout.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession httpSession){
@@ -38,6 +51,11 @@ public class UserController {
         return ServerResponse.createBySuccess();
     }
 
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "register.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> register(User user){
@@ -61,7 +79,7 @@ public class UserController {
     }
 
     /**
-     * 忘记密码
+     * 忘记密码，获取提交的问题
      */
     @RequestMapping(value = "forget_get_question.do",method = RequestMethod.POST)
     @ResponseBody
@@ -70,7 +88,7 @@ public class UserController {
     }
 
     /**
-     * 校验问题答案是否正确
+     * 提交问题答案
      */
     @RequestMapping(value = "forget_check_answer.do",method = RequestMethod.POST)
     @ResponseBody
@@ -78,12 +96,26 @@ public class UserController {
         return iUserService.checkAnswer(username,question,answer);
     }
 
+    /**
+     * 重置密码
+     * @param username
+     * @param passwordNew
+     * @param forgetToken
+     * @return
+     */
     @RequestMapping(value = "forget_reset_password.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken){
         return iUserService.forgetResetPassword(username,passwordNew,forgetToken);
     }
 
+    /**
+     * 登陆状态中重置密码
+     * @param session
+     * @param passwordOld
+     * @param passwordNew
+     * @return
+     */
     @RequestMapping(value = "reset_password.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session,String passwordOld,String passwordNew){
@@ -94,6 +126,12 @@ public class UserController {
         return iUserService.resetPassword(passwordOld,passwordNew,user);
     }
 
+    /**
+     * 登陆状态更新个人信息
+     * @param session
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "update_information.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> update_information(HttpSession session,User user){

@@ -19,6 +19,7 @@ public class UserServiceImpl implements IUserService {
     private UserMapper userMapper;
     @Override
     public ServerResponse<User> login(String username, String password) {
+        //检查数据中是否存在username
         int resultCount = userMapper.checkUsername(username);
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("用户名不存在");
@@ -100,6 +101,7 @@ public class UserServiceImpl implements IUserService {
             //说明问题以及问题答案是这个用户的，并且是正确的
             String forgetToken = UUID.randomUUID().toString();
             TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
+            System.out.println(TokenCache.TOKEN_PREFIX+username+":"+forgetToken);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("问题的答案错误");
@@ -137,9 +139,9 @@ public class UserServiceImpl implements IUserService {
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("旧密码错误");
         }
-        user.setPassword(MD5Util.MD5EncodeUtf8(passwordOld));
-        int updataCount = userMapper.updateByPrimaryKeySelective(user);
-        if(updataCount > 0){
+        user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
+        int updateCount = userMapper.updateByPrimaryKeySelective(user);
+        if(updateCount > 0){
             return ServerResponse.createBySuccessMessage("密码更新成功");
         }
         return ServerResponse.createByErrorMessage("密码更新失败");
