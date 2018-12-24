@@ -148,7 +148,11 @@ public class UserController {
         return response;
     }
 
-    //获取用户的详细信息
+    /**
+     * 获取当前用户的详细信息，并强制登陆
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "get_information.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> get_information(HttpSession session){
