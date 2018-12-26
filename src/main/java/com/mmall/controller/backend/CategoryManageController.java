@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import javax.xml.soap.SAAJResult;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 @Controller
 @RequestMapping("/manage/category/")

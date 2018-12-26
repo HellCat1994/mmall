@@ -36,7 +36,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ServerResponse<String> register(User user){
-        ServerResponse validResponse = this.checkValid(user.getUsername(),Const.USERNAME);
+        ServerResponse validResponse = this.checkValid(user.getUsername(), Const.USERNAME);
         if(!validResponse.isSuccess()){
             return validResponse;
         }
