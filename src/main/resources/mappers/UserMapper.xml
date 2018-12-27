@@ -156,7 +156,7 @@
       WHERE username = #{username}
   </select>
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
-      SELECT
+    SELECT
     <include refid="Base_Column_List" />
     FROM mmall_user
     WHERE username = #{username} and password = #{password}

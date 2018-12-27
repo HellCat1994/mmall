@@ -19,23 +19,42 @@ public class UserServiceImpl implements IUserService {
     private UserMapper userMapper;
     @Override
     public ServerResponse<User> login(String username, String password) {
-        //检查数据中是否存在username
+        /**
+         * 检验用户中是否有该用户名
+         */
         int resultCount = userMapper.checkUsername(username);
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("用户名不存在");
         }
+        /**
+         * 将密码进行MD5加密后与数据中的账号密码匹配
+         */
         //todo 密码登陆，MD5
         String md5Password = MD5Util.MD5EncodeUtf8(password);
         User user = userMapper.selectLogin(username,md5Password);
         if(user == null){
             return ServerResponse.createByErrorMessage("密码错误");
         }
+        /**
+         * 将密码设置为空，前端不进行显示
+         */
         user.setPassword(StringUtils.EMPTY);
+        /**
+         * 返回用户信息
+         */
         return ServerResponse.createBySuccess("登陆成功",user);
     }
 
+    /**
+     * 进行注册
+     * @param user
+     * @return
+     */
     @Override
     public ServerResponse<String> register(User user){
+        /**
+         * 检查用户名和email是否是有重复
+         */
         ServerResponse validResponse = this.checkValid(user.getUsername(), Const.USERNAME);
         if(!validResponse.isSuccess()){
             return validResponse;
@@ -44,10 +63,19 @@ public class UserServiceImpl implements IUserService {
         if(!validResponse.isSuccess()){
             return validResponse;
         }
+        /**
+         * 设置为普通用户权限
+         */
         user.setRole(Const.Role.ROLE_CUSTOMER);
-        //MD5加密
+
+        /**
+         * 将密码通过MD5加密
+         */
         user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
 
+        /**
+         * 插入用户
+         */
         int resultCount = userMapper.insert(user);
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("注册失败");
@@ -56,13 +84,19 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    /**
+     * 校验函数，主要校验数据中是否有重复的用户名和email
+     * @param string   传入的数据
+     * @param type    传入的类型，主要是判断是用户名还是邮箱
+     * @return
+     */
     @Override
     public ServerResponse<String> checkValid(String string,String type){
         if(org.apache.commons.lang3.StringUtils.isNoneBlank(type)){
             //开始校验
             if(Const.USERNAME.equals(type)){
                 int resultCount = userMapper.checkUsername(string);
-                if(resultCount > 0 ){
+                    if(resultCount > 0 ){
                     return ServerResponse.createByErrorMessage("用户名已经存在");
                 }
             }
@@ -134,7 +168,6 @@ public class UserServiceImpl implements IUserService {
     }
     @Override
     public ServerResponse<String> resetPassword(String passwordOld,String passwordNew,User user){
-        //防止横向越权，要校验一下这个用户的旧密码，一定要指定该用户，会查询count(1),如果不指定，结果就是true
         int resultCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld),user.getId());
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("旧密码错误");

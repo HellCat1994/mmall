@@ -4,8 +4,9 @@ import org.springframework.util.StringUtils;
 
 import java.security.MessageDigest;
 
-/**
 
+/**
+ * MD5Util加密
  */
 public class MD5Util {
     private static String byteArrayToHexString(byte b[]) {
@@ -50,6 +51,10 @@ public class MD5Util {
     public static String MD5EncodeUtf8(String origin) {
         return MD5Encode(origin, "utf-8");
     }
+
+//    public static void main(String[] args) {
+//        System.out.println(MD5Util.MD5EncodeUtf8("whg"));
+//    }
 
 
     private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5",

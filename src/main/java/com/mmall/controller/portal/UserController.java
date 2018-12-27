@@ -68,6 +68,11 @@ public class UserController {
         return iUserService.checkValid(string,type);
     }
 
+    /**
+     * 获取用户的信息，从session中获取
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "get_user_info.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session){
@@ -79,7 +84,7 @@ public class UserController {
     }
 
     /**
-     * 忘记密码，获取提交的问题
+     * 用户忘记密码，获取用户设置的问题
      */
     @RequestMapping(value = "forget_get_question.do",method = RequestMethod.POST)
     @ResponseBody
@@ -88,7 +93,7 @@ public class UserController {
     }
 
     /**
-     * 提交问题答案
+     * 校验问题和答案是够正确
      */
     @RequestMapping(value = "forget_check_answer.do",method = RequestMethod.POST)
     @ResponseBody
@@ -97,7 +102,7 @@ public class UserController {
     }
 
     /**
-     * 重置密码
+     * 重置密码，此时需要获取校验问题和答案是够正确的token
      * @param username
      * @param passwordNew
      * @param forgetToken
